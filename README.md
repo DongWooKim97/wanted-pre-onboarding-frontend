@@ -1,70 +1,63 @@
-# Getting Started with Create React App
+# 🔥 원티드 프리온보딩 인턴십 프론트엔드 사전과제 (김동우/DongWooKim97)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br>
 
-## Available Scripts
+## ⚠️ 주의사항
 
-In the project directory, you can run:
+> - Create React App을 이용하여 과제를 구현할 것.
+> - 함수 컴포넌트를 이용해서 진행할 것.
+> - UI는 평가에 영향이 없으나 자연스러운 형태를 구현할 것.
+> - README.md 작성 필수 ! (프로젝트의 실행 방법, 데모 영상 or 배포 링크 기제)
+> - 기능 구현에 직접적으로 연관된 라이브러리 사용 X
+> - 사용 가능 라이브러리
+>   - React Router
+>   - HTTP Client라이브러리(Axios 등)
+>   - 스타일링 관련 라이브러리
+>   - UI 관련 라이브러리
+>   - 설정관련 라이브러리
 
-### `npm start`
+<br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 📝 구현할 기능 목록
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<br>
 
-### `npm test`
+- **💻 1. 로그인/회원가입 페이지**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  > `/` 경로에 로그인 / 회원가입 기능을 개발.
+  >
+  > - 페이지 안에 이메일 입력창, 비밀번호 입력창, 제출 번트이 포함된 형태로 구성해주세요.
+  > - 로그인, 회원가입을 별도의 경로로 분리해도 무방
 
-### `npm run build`
+  - [x] `/` 경로에는 로그인 폼만 생성.(한 페이제 다른 폼 존재 방지를 위해)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    - [x] 이메일, 비밀번호 입력칸 생성
+    - [x] 로그인 폼을 통해 회원 정보가 없을 시, `/signup/`로 갈 수 있는 `button`생성
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [x] `/signup/` 경로에는 회원가입 폼 생성.
 
-### `npm run eject`
+  - [x] 이메일과 비밀번호을 입력받음
+  - [] 비밀번호 확인(재입력) 생성 후 Validate 진행
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<br>
+    
+  - [] 유효성 검사기능 구현(Assignment 1)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    - [] 1. 이메일 조건 : `@`포함
+    - [] 2. 비밀번호 조건 : 8자 이상
+    - [] 3. 입력된 이메일과 비밀번호가 위 조건을 만족할 때만 버튼이 활성화
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+<br>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- [] 로그인 성공 후(Assignment 2)
 
-## Learn More
+  - [] 올바른 응답을 받았을 때(Response Body에 JWT를 포함), `/todo`경로로 이동.
+  - [] 응답받은 JWT는 `로컬스토리지`에 저장.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<br>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [] 로그인 여부에 따른 리다이렉트 (Assignment 3)
+  - [] 로컬 스토리지에 토큰⭕ + `/`페이지에 접속한다면 `/todo`로 리다이렉트
+  - [] 로컬 스토리지에 토큰❌ + `/todo`페이지에 접속한다면 `/`로 리다이렉트
