@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import LoginContainer from '../components/LoginContainer';
+import LoginForm from '../components/LoginForm';
 
 export default function HomePage() {
 	return (
 		<HomeContainer>
-			<LoginContainer></LoginContainer>
+			<LoginForm></LoginForm>
 		</HomeContainer>
 	);
 }
