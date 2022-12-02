@@ -4,25 +4,31 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginContainer() {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const navigate = useNavigate();
 
 	const handleInput = (e) => {
 		const target = e.currentTarget;
 		target.id === 'email' ? setEmail(target.value) : setPassword(target.value);
 	};
 
-	const handleLoginButton = (e) => {
+	const handleSignupLink = (e) => {
+		navigate('/signup');
+	};
+
+	const onSumbitHandler = (e) => {
 		e.preventDefault();
+
 		postData();
+
 		async function postData(body) {
 			try {
 				//응답 성공
 				const response = await axios.post('/auth/signin', {
 					//보내고자 하는 데이터
-					email: 'bxxloo@naver.com',
-					password: 'ehwjs12#',
+					email: email,
+					password: password,
 				});
 				console.log(response.data);
 			} catch (error) {
@@ -32,23 +38,18 @@ export default function LoginContainer() {
 		}
 	};
 
-	const handleSignupLink = (e) => {
-		console.log('회원가입하러가즈앙~');
-		navigate('/signup');
-	};
-
 	return (
 		<LoginBox>
 			<LoginTitle>L O G I N</LoginTitle>
-			<form>
+			<form onSubmit={onSumbitHandler}>
 				<EmailBox value={email} id="email" onChange={handleInput}></EmailBox>
 				<PasswordBox
 					value={password}
 					id="password"
 					onChange={handleInput}
 				></PasswordBox>
+				<LoginButton type="submit">제출</LoginButton>
 			</form>
-			<LoginButton onClick={handleLoginButton}>제출</LoginButton>
 			<SignupLink onClick={handleSignupLink}>회원가입</SignupLink>
 		</LoginBox>
 	);

@@ -5,10 +5,7 @@ import styled from 'styled-components';
 export default function SignupPage() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
-	const handleSignupButton = (e) => {
-		console.log(`{ email : ${email} , password : ${password} }`);
-	};
+	const [repassword, setRepassword] = useState('');
 
 	const handleInput = (e) => {
 		const target = e.currentTarget;
@@ -20,17 +17,14 @@ export default function SignupPage() {
 
 		postData();
 
-		async function postData(body) {
+		async function postData() {
 			try {
-				//응답 성공
 				const response = await axios.post('/auth/signup', {
-					//보내고자 하는 데이터
 					email: email,
 					password: password,
 				});
-				console.log(response);
+				console.log(response.data);
 			} catch (error) {
-				//응답 실패
 				console.error(error);
 			}
 		}
@@ -41,19 +35,13 @@ export default function SignupPage() {
 			<SignupContainer>
 				<SignupTitle>S I G N U P</SignupTitle>
 				<form onSubmit={onSubmitHandler}>
-					<EmailBox
-						type="text"
-						id="email"
-						value={email}
-						onChange={handleInput}
-					></EmailBox>
+					<EmailBox id="email" value={email} onChange={handleInput}></EmailBox>
 					<PasswordBox
 						id="password"
-						type="text"
 						value={password}
 						onChange={handleInput}
 					></PasswordBox>
-					<SignupButton onClick={handleSignupButton}>회원가입</SignupButton>
+					<SignupButton type="submit">회원가입</SignupButton>
 				</form>
 			</SignupContainer>
 		</SignupForm>
