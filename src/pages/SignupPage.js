@@ -7,9 +7,16 @@ export default function SignupPage() {
 	const [password, setPassword] = useState('');
 	const [repassword, setRepassword] = useState('');
 
-	const handleInput = (e) => {
-		const target = e.currentTarget;
-		target.id === 'email' ? setEmail(target.value) : setPassword(target.value);
+	const handleEmail = (e) => {
+		setEmail(e.currentTarget.value);
+	};
+
+	const handlePassword = (e) => {
+		setPassword(e.currentTarget.value);
+	};
+
+	const handleRepassword = (e) => {
+		setRepassword(e.currentTarget.value);
 	};
 
 	const onSubmitHandler = (e) => {
@@ -35,12 +42,24 @@ export default function SignupPage() {
 			<SignupContainer>
 				<SignupTitle>S I G N U P</SignupTitle>
 				<form onSubmit={onSubmitHandler}>
-					<EmailBox id="email" value={email} onChange={handleInput}></EmailBox>
+					<EmailBox
+						id="email"
+						value={email}
+						onChange={handleEmail}
+						placeholder="이메일을 입력하세요"
+					></EmailBox>
 					<PasswordBox
 						id="password"
 						value={password}
-						onChange={handleInput}
+						placeholder="비밀번호를 입력하세요"
+						onChange={handlePassword}
 					></PasswordBox>
+					<RepasswordBox
+						id="password"
+						value={repassword}
+						placeholder="비밀번호를 다시 한번 입력하세요"
+						onChange={handleRepassword}
+					></RepasswordBox>
 					<SignupButton type="submit">회원가입</SignupButton>
 				</form>
 			</SignupContainer>
@@ -75,6 +94,13 @@ const EmailBox = styled.input`
 `;
 
 const PasswordBox = styled.input`
+	display: block;
+	margin: 25px auto;
+	width: 250px;
+	height: 10px;
+`;
+
+const RepasswordBox = styled.input`
 	display: block;
 	margin: 25px auto;
 	width: 250px;
