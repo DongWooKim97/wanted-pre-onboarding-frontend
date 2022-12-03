@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function LoginContainer() {
+export default function LoginForm() {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState('');
@@ -13,7 +13,10 @@ export default function LoginContainer() {
 	const [correctPassword, setCorrectPassword] = useState(false);
 
 	useEffect(() => {
-		localStorage.removeItem('access_token');
+		if (localStorage.getItem('access_token')) {
+			alert('로그인 정보가 있습니다.');
+			navigate('/todo');
+		}
 	}, []);
 
 	const isEmailCorrect = (value, name) => {
@@ -71,6 +74,7 @@ export default function LoginContainer() {
 					password: password,
 				});
 				localStorage.setItem('access_token', response.data.access_token);
+				navigate('/todo');
 			} catch (error) {
 				//응답 실패
 				console.error(error);
@@ -98,7 +102,7 @@ export default function LoginContainer() {
 					value={password}
 					placeholder="비밀번호를 입력하세요"
 					onChange={handlePasswordChange}
-					type="password"
+					type="text"
 				/>
 				{password.length > 0 && !correctPassword && (
 					<ValidInfo>Please enter valid email format</ValidInfo>
