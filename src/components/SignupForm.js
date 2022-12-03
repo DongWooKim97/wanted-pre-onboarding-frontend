@@ -77,6 +77,8 @@ export default function SignupForm() {
 					password: password,
 				});
 				console.log(response.data);
+				alert('회원가입 성공!');
+				navigate('/');
 			} catch (error) {
 				console.error(error);
 			}
@@ -102,7 +104,7 @@ export default function SignupForm() {
 					value={password}
 					placeholder="비밀번호를 입력하세요"
 					onChange={handlePasswordChange}
-					type="password"
+					type="text"
 				/>
 				{password.length > 0 && !correctPassword && (
 					<ValidInfo>Please enter valid password format</ValidInfo>
@@ -112,7 +114,7 @@ export default function SignupForm() {
 					value={confirmPassword}
 					placeholder="비밀번호를 다시 한번 입력하세요"
 					onChange={handleConfirmPasswordChange}
-					type="password"
+					type="text"
 				/>
 				{confirmPassword.length > 0 && !correctConfirmPassword && (
 					<ValidInfo>Please check password correct.</ValidInfo>
