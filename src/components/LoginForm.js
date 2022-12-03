@@ -1,42 +1,64 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginContainer() {
 	const navigate = useNavigate();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const [emailError, setEmailError] = useState(false);
-	const [passwordError, setPasswordError] = useState(false);
+	const [correctEmail, setCorrectEmail] = useState(false);
+	const [correctPassword, setCorrectPassword] = useState(false);
 
-	const handleEmail = (e) => {
-		const isValidEmail = email.includes('@') && email.includes('.');
-
-		isValidEmail ? setEmailError(false) : setEmailError(true);
-
-		setEmail(e.target.value);
+	const isEmailCorrect = (value, name) => {
+		if (!value.includes('@') || !value.includes('.')) {
+			setCorrectEmail(false);
+			return;
+		}
+		setCorrectEmail(true);
+		return;
+	};
+	const isPasswordCorrect = (value) => {
+		if (value.length < 8) {
+			setCorrectPassword(false);
+			return;
+		}
+		setCorrectPassword(true);
+		return;
 	};
 
-	const handlePassword = (e) => {
-		const isValidPassword = e.target.value.length;
+	const handleEmailChange = useCallback((e) => {
+		e.preventDefault();
+		const target = e.target.value;
+		setEmail(target);
+		isEmailCorrect(target);
+	}, []);
 
-		isValidPassword < 8 ? setPasswordError(true) : setPasswordError(false);
-
-		setPassword(e.target.value);
-	};
+	const handlePasswordChange = useCallback((e) => {
+		e.preventDefault();
+		const target = e.target.value;
+		setPassword(target);
+		isPasswordCorrect(target);
+	}, []);
 
 	const handleSignupLink = (e) => {
 		navigate('/signup');
 	};
+
+	const isValidLogin = !(
+		email.includes('@') &&
+		email.includes('.') &&
+		password.length >= 8
+	);
 
 	const onSumbitHandler = (e) => {
 		e.preventDefault();
 
 		postData();
 
-		async function postData(body) {
+		async function postData() {
 			try {
 				//응답 성공
 				const response = await axios.post('/auth/signin', {
@@ -56,18 +78,40 @@ export default function LoginContainer() {
 		<LoginBox>
 			<LoginTitle>L O G I N</LoginTitle>
 			<form onSubmit={onSumbitHandler}>
-				<EmailBox value={email} id="email" onChange={handleEmail} />
-				{emailError && <ValidInfo>Please enter valid email format</ValidInfo>}
-				<PasswordBox value={password} id="password" onChange={handlePassword} />
-				{passwordError && (
-					<ValidInfo>Please enter valid password format</ValidInfo>
+				<EmailBox
+					id="email"
+					value={email}
+					placeholder="이메일을 입력하세요"
+					onChange={handleEmailChange}
+					type="text"
+				/>
+				{email.length > 0 && !correctEmail && (
+					<ValidInfo>Please enter valid email format</ValidInfo>
 				)}
-				<LoginButton type="submit">제출</LoginButton>
+
+				<PasswordBox
+					id="password"
+					value={password}
+					placeholder="비밀번호를 입력하세요"
+					onChange={handlePasswordChange}
+					type="password"
+				/>
+				{password.length > 0 && !correctPassword && (
+					<ValidInfo>Please enter valid email format</ValidInfo>
+				)}
+
+				<LoginButton disabled={isValidLogin} type="submit">
+					제출
+				</LoginButton>
 			</form>
 			<SignupLink onClick={handleSignupLink}>회원가입</SignupLink>
 		</LoginBox>
 	);
 }
+
+const ValidInfo = styled.div`
+	color: red;
+`;
 
 const LoginBox = styled.div`
 	flex-direction: column;
@@ -77,10 +121,6 @@ const LoginBox = styled.div`
 	text-align: center;
 	justify-content: center;
 	align-items: center;
-`;
-
-const ValidInfo = styled.div`
-	color: red;
 `;
 
 const LoginTitle = styled.div`
@@ -110,7 +150,7 @@ const LoginButton = styled.button`
 	width: 25vw;
 	height: 5vh;
 	color: black;
-	background-color: yellow;
+	background-color: ${(props) => props.disabled || 'yellow'};
 	border-radius: 25%;
 `;
 

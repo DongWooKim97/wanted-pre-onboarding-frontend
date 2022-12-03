@@ -1,40 +1,64 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignupForm() {
 	const navigate = useNavigate();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
-	const [emailError, setEmailError] = useState(false);
-	const [passwordError, setPasswordError] = useState(false);
-	const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+	const [correctEmail, setCorrectEmail] = useState(false);
+	const [correctPassword, setCorrectPassword] = useState(false);
+	const [correctConfirmPassword, setCorrectConfirmPassword] = useState(false);
 
-	const handleEmail = (e) => {
-		const isValidEmail = email.includes('@') && email.includes('.');
+	const handleEmailChange = useCallback((e) => {
+		e.preventDefault();
+		const target = e.target.value;
+		setEmail(target);
+		isEmailCorrect(target);
+	}, []);
 
-		isValidEmail ? setEmailError(false) : setEmailError(true);
+	const handlePasswordChange = useCallback((e) => {
+		e.preventDefault();
+		const target = e.target.value;
+		setPassword(target);
+		isPasswordCorrect(target);
+	}, []);
 
-		setEmail(e.target.value);
+	const handleConfirmPasswordChange = (e) => {
+		e.preventDefault();
+		const target = e.target.value;
+		setConfirmPassword(target);
+		isConfirmPasswordCorrect(target);
 	};
 
-	const handlePassword = (e) => {
-		const isValidPassword = e.target.value.length;
-
-		isValidPassword < 8 ? setPasswordError(true) : setPasswordError(false);
-
-		setPassword(e.target.value);
+	const isEmailCorrect = (value) => {
+		if (!value.includes('@') || !value.includes('.')) {
+			setCorrectEmail(false);
+			return;
+		}
+		setCorrectEmail(true);
+		return;
+	};
+	const isPasswordCorrect = (value) => {
+		if (value.length < 8) {
+			setCorrectPassword(false);
+			return;
+		}
+		setCorrectPassword(true);
+		return;
 	};
 
-	const handleConfirmPassword = (e) => {
-		password === e.target.value
-			? setConfirmPasswordError(false)
-			: setConfirmPassword(true);
-
-		setConfirmPassword(e.target.value);
+	const isConfirmPasswordCorrect = (value) => {
+		if (password !== value) {
+			setCorrectConfirmPassword(false);
+			return;
+		}
+		setCorrectConfirmPassword(true);
+		return;
 	};
 
 	const handleBackpageLink = (e) => {
@@ -66,26 +90,31 @@ export default function SignupForm() {
 				<EmailBox
 					id="email"
 					value={email}
-					onChange={handleEmail}
+					onChange={handleEmailChange}
 					placeholder="이메일을 입력하세요"
+					type="text"
 				/>
-				{emailError && <ValidInfo>Please enter valid email format</ValidInfo>}
+				{email.length > 0 && !correctEmail && (
+					<ValidInfo>Please enter valid email format</ValidInfo>
+				)}
 				<PasswordBox
 					id="password"
 					value={password}
 					placeholder="비밀번호를 입력하세요"
-					onChange={handlePassword}
+					onChange={handlePasswordChange}
+					type="password"
 				/>
-				{passwordError && (
+				{password.length > 0 && !correctPassword && (
 					<ValidInfo>Please enter valid password format</ValidInfo>
 				)}
 				<ConfirmPasswordBox
-					id="password"
+					id="confirm password"
 					value={confirmPassword}
 					placeholder="비밀번호를 다시 한번 입력하세요"
-					onChange={handleConfirmPassword}
+					onChange={handleConfirmPasswordChange}
+					type="password"
 				/>
-				{confirmPasswordError && (
+				{confirmPassword.length > 0 && !correctConfirmPassword && (
 					<ValidInfo>Please check password correct.</ValidInfo>
 				)}
 				<SignupButton type="submit">회원가입</SignupButton>
@@ -145,7 +174,8 @@ const SignupButton = styled.button`
 	height: 5vh;
 	border-radius: 25%;
 	background-color: yellow;
-	color: black;
+	/* color: black; */
+	color: ${(props) => (props.active ? 'yellow' : 'white')};
 `;
 
 const BackpageLink = styled.button`
