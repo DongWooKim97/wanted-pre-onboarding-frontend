@@ -12,27 +12,17 @@ export default function LoginContainer() {
 	const [passwordError, setPasswordError] = useState(false);
 
 	const handleEmail = (e) => {
-		const emailRegex =
-			/^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+		const isValidEmail = email.includes('@') && email.includes('.');
 
-		if (!e.target.value || emailRegex.test(e.target.value)) {
-			setEmailError(false);
-		} else {
-			setEmailError(true);
-		}
+		isValidEmail ? setEmailError(false) : setEmailError(true);
 
 		setEmail(e.target.value);
 	};
 
 	const handlePassword = (e) => {
-		const passwordRegex =
-			/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+		const isValidPassword = e.target.value.length;
 
-		if (!e.target.value || passwordRegex.test(e.target.value)) {
-			setPasswordError(false);
-		} else {
-			setPasswordError(true);
-		}
+		isValidPassword < 8 ? setPasswordError(true) : setPasswordError(false);
 
 		setPassword(e.target.value);
 	};
@@ -67,9 +57,11 @@ export default function LoginContainer() {
 			<LoginTitle>L O G I N</LoginTitle>
 			<form onSubmit={onSumbitHandler}>
 				<EmailBox value={email} id="email" onChange={handleEmail} />
-				{emailError && <ValidInfo>이메일 형식을 확인하세요.</ValidInfo>}
+				{emailError && <ValidInfo>Please enter valid email format</ValidInfo>}
 				<PasswordBox value={password} id="password" onChange={handlePassword} />
-				{passwordError && <ValidInfo>비밀번호 형식을 확인하세요.</ValidInfo>}
+				{passwordError && (
+					<ValidInfo>Please enter valid password format</ValidInfo>
+				)}
 				<LoginButton type="submit">제출</LoginButton>
 			</form>
 			<SignupLink onClick={handleSignupLink}>회원가입</SignupLink>

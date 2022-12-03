@@ -14,34 +14,26 @@ export default function SignupForm() {
 	const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
 	const handleEmail = (e) => {
-		const emailRegex =
-			/^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+		const isValidEmail = email.includes('@') && email.includes('.');
 
-		if (!e.target.value || emailRegex.test(e.target.value)) {
-			setEmailError(false);
-		} else {
-			setEmailError(true);
-		}
+		isValidEmail ? setEmailError(false) : setEmailError(true);
 
 		setEmail(e.target.value);
 	};
 
 	const handlePassword = (e) => {
-		const passwordRegex =
-			/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+		const isValidPassword = e.target.value.length;
 
-		if (!e.target.value || passwordRegex.test(e.target.value)) {
-			setPasswordError(false);
-		} else {
-			setPasswordError(true);
-		}
+		isValidPassword < 8 ? setPasswordError(true) : setPasswordError(false);
 
 		setPassword(e.target.value);
 	};
 
 	const handleConfirmPassword = (e) => {
-		if (password === e.target.value) setConfirmPasswordError(false);
-		else setConfirmPasswordError(true);
+		password === e.target.value
+			? setConfirmPasswordError(false)
+			: setConfirmPassword(true);
+
 		setConfirmPassword(e.target.value);
 	};
 
