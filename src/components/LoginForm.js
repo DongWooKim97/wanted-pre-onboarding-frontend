@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginContainer() {
@@ -11,6 +11,10 @@ export default function LoginContainer() {
 
 	const [correctEmail, setCorrectEmail] = useState(false);
 	const [correctPassword, setCorrectPassword] = useState(false);
+
+	useEffect(() => {
+		localStorage.removeItem('access_token');
+	}, []);
 
 	const isEmailCorrect = (value, name) => {
 		if (!value.includes('@') || !value.includes('.')) {
@@ -66,7 +70,7 @@ export default function LoginContainer() {
 					email: email,
 					password: password,
 				});
-				console.log(response.data);
+				localStorage.setItem('access_token', response.data.access_token);
 			} catch (error) {
 				//응답 실패
 				console.error(error);
