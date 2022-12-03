@@ -1,22 +1,52 @@
 import axios from 'axios';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignupForm() {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [repassword, setRepassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+
+	const [emailError, setEmailError] = useState(false);
+	const [passwordError, setPasswordError] = useState(false);
+	const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
 	const handleEmail = (e) => {
-		setEmail(e.currentTarget.value);
+		const emailRegex =
+			/^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+		if (!e.target.value || emailRegex.test(e.target.value)) {
+			setEmailError(false);
+		} else {
+			setEmailError(true);
+		}
+
+		setEmail(e.target.value);
 	};
 
 	const handlePassword = (e) => {
-		setPassword(e.currentTarget.value);
+		const passwordRegex =
+			/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+
+		if (!e.target.value || passwordRegex.test(e.target.value)) {
+			setPasswordError(false);
+		} else {
+			setPasswordError(true);
+		}
+
+		setPassword(e.target.value);
 	};
 
-	const handleRepassword = (e) => {
-		setRepassword(e.currentTarget.value);
+	const handleConfirmPassword = (e) => {
+		if (password === e.target.value) setConfirmPasswordError(false);
+		else setConfirmPasswordError(true);
+		setConfirmPassword(e.target.value);
+	};
+
+	const handleBackpageLink = (e) => {
+		navigate('/');
 	};
 
 	const onSubmitHandler = (e) => {
@@ -46,26 +76,40 @@ export default function SignupForm() {
 					value={email}
 					onChange={handleEmail}
 					placeholder="이메일을 입력하세요"
-				></EmailBox>
+				/>
+				{emailError && <ValidInfo>Please enter valid email format</ValidInfo>}
 				<PasswordBox
 					id="password"
 					value={password}
 					placeholder="비밀번호를 입력하세요"
 					onChange={handlePassword}
-				></PasswordBox>
-				<RepasswordBox
+				/>
+				{passwordError && (
+					<ValidInfo>Please enter valid password format</ValidInfo>
+				)}
+				<ConfirmPasswordBox
 					id="password"
-					value={repassword}
+					value={confirmPassword}
 					placeholder="비밀번호를 다시 한번 입력하세요"
-					onChange={handleRepassword}
-				></RepasswordBox>
+					onChange={handleConfirmPassword}
+				/>
+				{confirmPasswordError && (
+					<ValidInfo>Please check password correct.</ValidInfo>
+				)}
 				<SignupButton type="submit">회원가입</SignupButton>
 			</form>
+			<BackpageLink onClick={handleBackpageLink}>홈으로</BackpageLink>
 		</SignupContainer>
 	);
 }
 
+const ValidInfo = styled.div`
+	color: red;
+`;
+
 const SignupContainer = styled.div`
+	width: 100vw;
+	height: 100vh;
 	justify-content: center;
 	text-align: center;
 	align-items: center;
@@ -84,26 +128,36 @@ const SignupTitle = styled.div`
 const EmailBox = styled.input`
 	margin: 25px auto;
 	display: block;
-	width: 250px;
-	height: 10px;
+	width: 25vw;
+	height: 5vh;
 `;
 
 const PasswordBox = styled.input`
 	display: block;
 	margin: 25px auto;
-	width: 250px;
-	height: 10px;
+	width: 25vw;
+	height: 5vh;
 `;
 
-const RepasswordBox = styled.input`
+const ConfirmPasswordBox = styled.input`
 	display: block;
 	margin: 25px auto;
-	width: 250px;
-	height: 10px;
+	width: 25vw;
+	height: 5vh;
 `;
 
 const SignupButton = styled.button`
-	margin: auto;
+	margin: 25px auto;
 	color: purple;
+	width: 25vw;
+	height: 5vh;
+	border-radius: 25%;
+`;
+
+const BackpageLink = styled.button`
+	margin: 25px auto;
+	color: gray;
+	width: 25vw;
+	height: 5vh;
 	border-radius: 25%;
 `;

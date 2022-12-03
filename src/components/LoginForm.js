@@ -8,9 +8,33 @@ export default function LoginContainer() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleInput = (e) => {
-		const target = e.currentTarget;
-		target.id === 'email' ? setEmail(target.value) : setPassword(target.value);
+	const [emailError, setEmailError] = useState(false);
+	const [passwordError, setPasswordError] = useState(false);
+
+	const handleEmail = (e) => {
+		const emailRegex =
+			/^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+		if (!e.target.value || emailRegex.test(e.target.value)) {
+			setEmailError(false);
+		} else {
+			setEmailError(true);
+		}
+
+		setEmail(e.target.value);
+	};
+
+	const handlePassword = (e) => {
+		const passwordRegex =
+			/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+
+		if (!e.target.value || passwordRegex.test(e.target.value)) {
+			setPasswordError(false);
+		} else {
+			setPasswordError(true);
+		}
+
+		setPassword(e.target.value);
 	};
 
 	const handleSignupLink = (e) => {
@@ -42,12 +66,10 @@ export default function LoginContainer() {
 		<LoginBox>
 			<LoginTitle>L O G I N</LoginTitle>
 			<form onSubmit={onSumbitHandler}>
-				<EmailBox value={email} id="email" onChange={handleInput}></EmailBox>
-				<PasswordBox
-					value={password}
-					id="password"
-					onChange={handleInput}
-				></PasswordBox>
+				<EmailBox value={email} id="email" onChange={handleEmail} />
+				{emailError && <ValidInfo>이메일 형식을 확인하세요.</ValidInfo>}
+				<PasswordBox value={password} id="password" onChange={handlePassword} />
+				{passwordError && <ValidInfo>비밀번호 형식을 확인하세요.</ValidInfo>}
 				<LoginButton type="submit">제출</LoginButton>
 			</form>
 			<SignupLink onClick={handleSignupLink}>회원가입</SignupLink>
@@ -58,11 +80,15 @@ export default function LoginContainer() {
 const LoginBox = styled.div`
 	flex-direction: column;
 	background-color: green;
-	width: 25vw;
-	height: 25vh;
+	width: 100vw;
+	height: 100vh;
 	text-align: center;
 	justify-content: center;
 	align-items: center;
+`;
+
+const ValidInfo = styled.div`
+	color: red;
 `;
 
 const LoginTitle = styled.div`
@@ -76,25 +102,29 @@ const LoginTitle = styled.div`
 const EmailBox = styled.input`
 	margin: 25px auto;
 	display: block;
-	width: 250px;
-	height: 10px;
+	width: 25vw;
+	height: 5vh;
 `;
 
 const PasswordBox = styled.input`
 	display: block;
 	margin: 25px auto;
-	width: 250px;
-	height: 10px;
+	width: 25vw;
+	height: 5vh;
 `;
 
 const LoginButton = styled.button`
-	margin: auto;
+	margin: 25px auto;
+	width: 25vw;
+	height: 5vh;
 	color: purple;
 	border-radius: 25%;
 `;
 
 const SignupLink = styled.button`
-	margin: auto;
+	margin: 25px auto;
 	color: gray;
+	width: 25vw;
+	height: 5vh;
 	border-radius: 25%;
 `;
