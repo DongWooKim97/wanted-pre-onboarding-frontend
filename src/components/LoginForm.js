@@ -109,13 +109,15 @@ const LoginButton = styled.button`
 	margin: 25px auto;
 	width: 25vw;
 	height: 5vh;
-	color: purple;
+	color: black;
+	background-color: yellow;
 	border-radius: 25%;
 `;
 
 const SignupLink = styled.button`
 	margin: 25px auto;
-	color: gray;
+	background-color: yellow;
+	color: black;
 	width: 25vw;
 	height: 5vh;
 	border-radius: 25%;

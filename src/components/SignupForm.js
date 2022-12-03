@@ -144,6 +144,8 @@ const SignupButton = styled.button`
 	width: 25vw;
 	height: 5vh;
 	border-radius: 25%;
+	background-color: yellow;
+	color: black;
 `;
 
 const BackpageLink = styled.button`
@@ -152,4 +154,6 @@ const BackpageLink = styled.button`
 	width: 25vw;
 	height: 5vh;
 	border-radius: 25%;
+	background-color: yellow;
+	color: black;
 `;
