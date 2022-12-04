@@ -1,22 +1,61 @@
 import styled from 'styled-components';
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import React from 'react';
+const InputBox = ({ todoList, setTodoList }) => {
+	const [text, setText] = useState('');
+	const inputRef = useRef(null);
 
-const InputBox = () => (
-	<InputContainer className="todoapp__inputbox">
-		{/* 아이템 내용 입력 input */}
-		<TodoInput
-			type="text"
-			name="todoItem"
-			placeholder="할 일을 입력해주세요"
-			className="todoapp__inputbox-inp"
-		/>
-		{/* 입력 후 아이템 추가 버튼 */}
-		<TodoSubmitButton type="submit" className="todoapp__inputbox-add-btn">
-			추가
-		</TodoSubmitButton>
-	</InputContainer>
-);
+	const onChangeInput = (e) => {
+		setText(e.target.value);
+	};
+
+	const onClickAddButton = () => {
+		const nextTodoList = todoList.concat({
+			id: todoList.length,
+			text,
+			checked: false,
+		});
+		setTodoList(nextTodoList);
+		setText('');
+		inputRef.current.focus();
+	};
+
+	useEffect(() => {
+		console.log(todoList);
+	}, [todoList]);
+
+	return (
+		<InputContainer className="todoapp__inputbox">
+			<TodoInput
+				type="text"
+				name="todoItem"
+				value={text}
+				ref={inputRef}
+				placeholder="할 일을 입력해주세요"
+				className="todoapp__inputbox-inp"
+				onChange={onChangeInput}
+			/>
+			<TodoSubmitButton
+				type="submit"
+				className="todoapp__inputbox-add-btn"
+				onClick={onClickAddButton}
+			>
+				추가
+			</TodoSubmitButton>
+		</InputContainer>
+	);
+};
+
+InputBox.propTypes = {
+	todoList: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			text: PropTypes.string.isRequired,
+		}).isRequired
+	),
+	setTodoList: PropTypes.func.isRequired,
+};
 
 const InputContainer = styled.div`
 	width: 100%;

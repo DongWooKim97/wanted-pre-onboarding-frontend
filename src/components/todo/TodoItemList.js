@@ -1,17 +1,40 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, { useState } from 'react';
 import ToDoItem from './TodoItem';
+import PropTypes from 'prop-types';
 
-const ToDoItemList = () => (
-	<TodoAppList>
-		<TodoAppTitle>제목</TodoAppTitle>
-		<TodoAppUl>
-			<ToDoItem />
-			<ToDoItem />
-			<ToDoItem />
-		</TodoAppUl>
-	</TodoAppList>
-);
+const ToDoItemList = ({ title, todoList, setTodoList, checkedList }) => {
+	return (
+		<TodoAppList>
+			<TodoAppTitle>{title}</TodoAppTitle>
+			<TodoAppUl>
+				{todoList &&
+					todoList.map((todoItem) => {
+						if (checkedList !== todoItem.checked) return null;
+						return (
+							<ToDoItem
+								key={todoItem.id}
+								todoItem={todoItem}
+								todoList={todoList}
+								setTodoList={setTodoList}
+							/>
+						);
+					})}
+			</TodoAppUl>
+		</TodoAppList>
+	);
+};
+
+ToDoItemList.propTypes = {
+	title: PropTypes.string.isRequired,
+	todoList: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			text: PropTypes.string.isRequired,
+		})
+	),
+	setTodoList: PropTypes.func.isRequired,
+};
 
 const TodoAppList = styled.div`
 	margin-top: 30px;

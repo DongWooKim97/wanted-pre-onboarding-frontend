@@ -6,6 +6,7 @@ import ToDoItemList from '../todo/TodoItemList';
 
 export default function TodoForm() {
 	const navigate = useNavigate();
+	const [todoList, setTodoList] = useState([]); // (1)
 
 	useEffect(() => {
 		if (!localStorage.getItem('access_token')) {
@@ -16,9 +17,19 @@ export default function TodoForm() {
 
 	return (
 		<TodoContainer>
-			<InputBox />
-			<ToDoItemList />
-			<ToDoItemList />
+			<InputBox todoList={todoList} setTodoList={setTodoList} />
+			<ToDoItemList
+				title={'할 일'}
+				todoList={todoList}
+				setTodoList={setTodoList}
+				checkedList={false}
+			/>
+			<ToDoItemList
+				title={'완료한 항목'}
+				todoList={todoList}
+				setTodoList={setTodoList}
+				checkedList={true}
+			/>
 		</TodoContainer>
 	);
 }
