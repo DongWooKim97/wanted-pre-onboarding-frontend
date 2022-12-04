@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import InputBox from '../todo/InputBox';
+import ToDoItemList from '../todo/TodoItemList';
 
 export default function TodoForm() {
 	const navigate = useNavigate();
@@ -13,27 +15,19 @@ export default function TodoForm() {
 	}, []);
 
 	return (
-		<TodoWrap>
-			<TodoBox></TodoBox>
-		</TodoWrap>
+		<TodoContainer>
+			<InputBox />
+			<ToDoItemList />
+			<ToDoItemList />
+		</TodoContainer>
 	);
 }
 
-const TodoWrap = styled.div`
-	width: 100vw;
-	height: 100vh;
-	justify-content: center;
-	text-align: center;
-	align-items: center;
-	background-color: green;
+const TodoContainer = styled.div`
+	max-width: 480px;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
-`;
-
-const TodoBox = styled.div`
-	position: relative;
-	background-color: yellow;
-	margin: auto;
-	width: 75vw;
-	height: 75vh;
+	justify-content: center;
+	padding: 50px 0;
 `;
