@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import TodoForm from '../components/TodoForm';
+import TodoForm from '../components/form/TodoForm';
 
 export default function TodoPage() {
 	return (
