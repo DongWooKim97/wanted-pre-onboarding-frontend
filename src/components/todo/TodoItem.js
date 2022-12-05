@@ -1,14 +1,55 @@
+import axios from 'axios';
 import styled, { css } from 'styled-components';
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useRef } from 'react';
 
 const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
+	const [edited, setEdited] = useState(false);
+	const [newText, setNewText] = useState(todoItem.text);
+
+	const editInputRef = useRef(null);
+
+	useEffect(() => {
+		// edit 모드일때 포커싱을 한다.
+		if (edited) {
+			editInputRef.current.focus();
+		}
+	}, [edited]);
+
+	const onChangeEditInput = (e) => {
+		setNewText(e.target.value);
+	};
+
+	const onClickEditButton = () => {
+		setEdited(true);
+	};
+
+	const onClickDeleteButton = () => {
+		if (window.confirm('정말로 지우실건가요?')) {
+			const nextTodoList = todoList.map((item) => ({
+				...item,
+				deleted: item.id === todoItem.id ? true : item.deleted,
+			}));
+
+			setTodoList(nextTodoList);
+		}
+	};
+
 	const onChangeCheckbox = () => {
 		const nextTodoList = todoList.map((item) => ({
 			...item,
 			checked: item.id === todoItem.id ? !item.checked : item.checked,
 		}));
 		setTodoList(nextTodoList);
+	};
+
+	const onClickSubmitButton = () => {
+		const nextTodoList = todoList.map((item) => ({
+			...item,
+			text: item.id === todoItem.id ? newText : item.text, // 새로운 아이템 내용을 넣어줌
+		}));
+		setTodoList(nextTodoList); // 새로운 리스트를 넣어줌
+
+		setEdited(false); // 수정모드를 다시 읽기모드로 변경
 	};
 
 	return (
@@ -19,34 +60,57 @@ const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 				checked={todoItem.checked}
 				onChange={onChangeCheckbox}
 			/>
-			<TodoContext
-				// check={`todoapp__item-ctx ${todoItem.checked ? 'checked' : ''}`}
-				// toggle={todoItem.checked ? 'chekced' : ''}
-				toggle={todoItem.checked}
-			>
-				{todoItem.text}
-			</TodoContext>
-
-			{!todoItem.checked ? <TodoEditButton>✏</TodoEditButton> : null}
-
-			<TodoDeleteButton>🗑</TodoDeleteButton>
+			{
+				// 아이템 내용
+				edited ? (
+					<TodoEditInput
+						type="text"
+						value={newText}
+						ref={editInputRef} // ref 로 DOM에 접근
+						onChange={onChangeEditInput}
+					/>
+				) : (
+					<TodoContext
+						className={`todoapp__item-ctx ${
+							todoItem.checked ? 'todoapp__item-ctx-checked' : ''
+						}`}
+					>
+						{todoItem.text}
+					</TodoContext>
+				)
+			}
+			{!todoItem.checked ? (
+				edited ? (
+					<TodoEditButton
+						type="button"
+						onClick={onClickSubmitButton}
+						className="todoapp__item-edit-btn"
+					>
+						👌
+					</TodoEditButton>
+				) : (
+					<TodoEditButton
+						type="button"
+						className="todoapp__item-edit-btn"
+						onClick={onClickEditButton}
+					>
+						✏
+					</TodoEditButton>
+				)
+			) : null}
+			<TodoDeleteButton onClick={onClickDeleteButton}>🗑</TodoDeleteButton>
 		</TodoAppItem>
 	);
 };
 
-ToDoItem.propTypes = {
-	todoItem: PropTypes.shape({
-		id: PropTypes.number,
-		text: PropTypes.string.isRequired,
-	}),
-	todoList: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			text: PropTypes.string.isRequired,
-		})
-	),
-	setTodoList: PropTypes.func.isRequired,
-};
+const TodoEditInput = styled.input`
+	flex: 1;
+	border: none;
+	border-bottom: 1px solid #f1f3f5;
+	padding: 5px;
+	font-size: 1em;
+	box-sizing: border-box;
+`;
 
 const TodoAppItem = styled.li`
 	display: flex;

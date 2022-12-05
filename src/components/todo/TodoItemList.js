@@ -10,6 +10,8 @@ const ToDoItemList = ({ title, todoList, setTodoList, checkedList }) => {
 			<TodoAppUl>
 				{todoList &&
 					todoList.map((todoItem) => {
+						console.log(todoItem);
+						if (todoItem.deleted) return null;
 						if (checkedList !== todoItem.checked) return null;
 						return (
 							<ToDoItem

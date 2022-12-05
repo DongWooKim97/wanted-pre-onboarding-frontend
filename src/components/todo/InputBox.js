@@ -1,25 +1,56 @@
 import styled from 'styled-components';
 import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const InputBox = ({ todoList, setTodoList }) => {
 	const [text, setText] = useState('');
+
 	const inputRef = useRef(null);
 
 	const onChangeInput = (e) => {
 		setText(e.target.value);
 	};
 
-	const onClickAddButton = () => {
-		const nextTodoList = todoList.concat({
-			id: todoList.length,
-			text,
-			checked: false,
-		});
-		setTodoList(nextTodoList);
-		setText('');
+	async function onClickAddButton() {
+		try {
+			const response = await axios.post(
+				'/todos',
+				{
+					todo: text,
+				},
+				{
+					headers: {
+						ContentType: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					},
+				}
+			);
+			console.log(response.data);
+			setText('');
+			getData();
+		} catch (error) {
+			console.error(error);
+		}
+
 		inputRef.current.focus();
-	};
+	}
+
+	async function getData() {
+		try {
+			const response = await axios.get('/todos', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+				},
+			});
+			setTodoList(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	useEffect(() => {
+		getData();
+	}, []);
 
 	useEffect(() => {
 		console.log(todoList);
@@ -45,16 +76,6 @@ const InputBox = ({ todoList, setTodoList }) => {
 			</TodoSubmitButton>
 		</InputContainer>
 	);
-};
-
-InputBox.propTypes = {
-	todoList: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			text: PropTypes.string.isRequired,
-		}).isRequired
-	),
-	setTodoList: PropTypes.func.isRequired,
 };
 
 const InputContainer = styled.div`
