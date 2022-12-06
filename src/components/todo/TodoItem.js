@@ -1,19 +1,10 @@
 import axios from 'axios';
 import styled, { css } from 'styled-components';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 	const [edited, setEdited] = useState(false);
-	const [newText, setNewText] = useState(todoItem.text);
-
-	const editInputRef = useRef(null);
-
-	useEffect(() => {
-		// edit 모드일때 포커싱을 한다.
-		if (edited) {
-			editInputRef.current.focus();
-		}
-	}, [edited]);
+	const [newText, setNewText] = useState(todoItem.todo);
 
 	const onChangeEditInput = (e) => {
 		setNewText(e.target.value);
@@ -23,82 +14,103 @@ const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 		setEdited(true);
 	};
 
-	const onClickDeleteButton = () => {
-		if (window.confirm('정말로 지우실건가요?')) {
-			const nextTodoList = todoList.map((item) => ({
-				...item,
-				deleted: item.id === todoItem.id ? true : item.deleted,
-			}));
-
-			setTodoList(nextTodoList);
+	async function updateTodoCompleted() {
+		try {
+			await axios.put(
+				`/todos/${todoItem.id}`,
+				{
+					todo: todoItem.todo,
+					isCompleted: !todoItem.isCompleted,
+				},
+				{
+					headers: {
+						ContentType: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					},
+				}
+			);
+			getTodo();
+		} catch (error) {
+			console.log(error);
 		}
-	};
+	}
 
-	const onChangeCheckbox = () => {
-		const nextTodoList = todoList.map((item) => ({
-			...item,
-			checked: item.id === todoItem.id ? !item.checked : item.checked,
-		}));
-		setTodoList(nextTodoList);
-	};
+	async function getTodo() {
+		try {
+			const response = await axios.get('/todos', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+				},
+			});
+			console.log(response.data);
+			setTodoList(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-	const onClickSubmitButton = () => {
-		const nextTodoList = todoList.map((item) => ({
-			...item,
-			text: item.id === todoItem.id ? newText : item.text, // 새로운 아이템 내용을 넣어줌
-		}));
-		setTodoList(nextTodoList); // 새로운 리스트를 넣어줌
+	async function updateTodoTextEdit(e) {
+		try {
+			await axios.put(
+				`/todos/${todoItem.id}`,
+				{
+					todo: newText,
+					isCompleted: todoItem.isCompleted,
+				},
+				{
+					headers: {
+						ContentType: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					},
+				}
+			);
+			getTodo();
+		} catch (error) {
+			console.log(error);
+		}
 
-		setEdited(false); // 수정모드를 다시 읽기모드로 변경
-	};
+		setEdited(false);
+	}
+
+	async function deleteTodo() {
+		try {
+			await axios.delete(`/todos/${todoItem.id}`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+				},
+			});
+			getTodo();
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<TodoAppItem>
 			<TodoCheckBox
 				type="checkbox"
-				className="todoapp__item-checkbox"
-				checked={todoItem.checked}
-				onChange={onChangeCheckbox}
+				checked={todoItem.isCompleted}
+				onChange={updateTodoCompleted}
 			/>
-			{
-				// 아이템 내용
+			{edited ? (
+				<TodoEditInput
+					type="text"
+					value={newText}
+					onChange={onChangeEditInput}
+				/>
+			) : (
+				<TodoContext id={todoItem.id}>{todoItem.todo}</TodoContext>
+			)}
+			{!todoItem.isCompleted ? (
 				edited ? (
-					<TodoEditInput
-						type="text"
-						value={newText}
-						ref={editInputRef} // ref 로 DOM에 접근
-						onChange={onChangeEditInput}
-					/>
+					<TodoEditButton onClick={updateTodoTextEdit}>👌</TodoEditButton>
 				) : (
-					<TodoContext
-						className={`todoapp__item-ctx ${
-							todoItem.checked ? 'todoapp__item-ctx-checked' : ''
-						}`}
-					>
-						{todoItem.text}
-					</TodoContext>
-				)
-			}
-			{!todoItem.checked ? (
-				edited ? (
-					<TodoEditButton
-						type="button"
-						onClick={onClickSubmitButton}
-						className="todoapp__item-edit-btn"
-					>
-						👌
-					</TodoEditButton>
-				) : (
-					<TodoEditButton
-						type="button"
-						className="todoapp__item-edit-btn"
-						onClick={onClickEditButton}
-					>
-						✏
-					</TodoEditButton>
+					<TodoEditButton onClick={onClickEditButton}>✏</TodoEditButton>
 				)
 			) : null}
-			<TodoDeleteButton onClick={onClickDeleteButton}>🗑</TodoDeleteButton>
+			<TodoDeleteButton id={todoItem.id} onClick={deleteTodo}>
+				🗑
+			</TodoDeleteButton>
 		</TodoAppItem>
 	);
 };
@@ -128,6 +140,7 @@ const TodoCheckBox = styled.input`
 
 const TodoContext = styled.span`
 	flex: 1;
+	background-color: white;
 
 	${(props) =>
 		!props.toggle

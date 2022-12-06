@@ -11,9 +11,13 @@ const InputBox = ({ todoList, setTodoList }) => {
 		setText(e.target.value);
 	};
 
-	async function onClickAddButton() {
+	useEffect(() => {
+		getTodo();
+	}, []);
+
+	async function createTodo() {
 		try {
-			const response = await axios.post(
+			await axios.post(
 				'/todos',
 				{
 					todo: text,
@@ -25,53 +29,38 @@ const InputBox = ({ todoList, setTodoList }) => {
 					},
 				}
 			);
-			console.log(response.data);
 			setText('');
-			getData();
+			getTodo();
 		} catch (error) {
 			console.error(error);
 		}
-
 		inputRef.current.focus();
 	}
 
-	async function getData() {
+	async function getTodo() {
 		try {
 			const response = await axios.get('/todos', {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
 				},
 			});
+			console.log(response.data);
 			setTodoList(response.data);
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	useEffect(() => {
-		getData();
-	}, []);
-
-	useEffect(() => {
-		console.log(todoList);
-	}, [todoList]);
-
 	return (
 		<InputContainer className="todoapp__inputbox">
 			<TodoInput
 				type="text"
-				name="todoItem"
 				value={text}
 				ref={inputRef}
 				placeholder="할 일을 입력해주세요"
-				className="todoapp__inputbox-inp"
 				onChange={onChangeInput}
 			/>
-			<TodoSubmitButton
-				type="submit"
-				className="todoapp__inputbox-add-btn"
-				onClick={onClickAddButton}
-			>
+			<TodoSubmitButton type="submit" onClick={createTodo}>
 				추가
 			</TodoSubmitButton>
 		</InputContainer>

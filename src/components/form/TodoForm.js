@@ -6,7 +6,7 @@ import ToDoItemList from '../todo/TodoItemList';
 
 export default function TodoForm() {
 	const navigate = useNavigate();
-	const [todoList, setTodoList] = useState([]); // (1)
+	const [todoList, setTodoList] = useState([]);
 
 	useEffect(() => {
 		if (!localStorage.getItem('access_token')) {
@@ -17,6 +17,7 @@ export default function TodoForm() {
 
 	return (
 		<TodoContainer>
+			<TodoWrapTitle>T O D O - L I S T</TodoWrapTitle>
 			<InputBox todoList={todoList} setTodoList={setTodoList} />
 			<ToDoItemList
 				title={'할 일'}
@@ -40,5 +41,11 @@ const TodoContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+
 	padding: 50px 0;
+`;
+
+const TodoWrapTitle = styled.h1`
+	position: relative;
+	text-align: center;
 `;

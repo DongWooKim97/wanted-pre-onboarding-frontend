@@ -3,10 +3,16 @@ import TodoForm from '../components/form/TodoForm';
 
 export default function TodoPage() {
 	return (
-		<HomeContainer>
+		<TodoContainer>
 			<TodoForm />
-		</HomeContainer>
+		</TodoContainer>
 	);
 }
 
-const HomeContainer = styled.div``;
+const TodoContainer = styled.div`
+	justify-content: center;
+	flex-direction: column;
+
+	width: 100vw;
+	height: 100vh;
+`;

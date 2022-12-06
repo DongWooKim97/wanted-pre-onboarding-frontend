@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React from 'react';
 import ToDoItem from './TodoItem';
-import PropTypes from 'prop-types';
 
 const ToDoItemList = ({ title, todoList, setTodoList, checkedList }) => {
 	return (
@@ -10,32 +9,18 @@ const ToDoItemList = ({ title, todoList, setTodoList, checkedList }) => {
 			<TodoAppUl>
 				{todoList &&
 					todoList.map((todoItem) => {
-						console.log(todoItem);
-						if (todoItem.deleted) return null;
-						if (checkedList !== todoItem.checked) return null;
-						return (
+						return checkedList === todoItem.isCompleted ? (
 							<ToDoItem
 								key={todoItem.id}
 								todoItem={todoItem}
 								todoList={todoList}
 								setTodoList={setTodoList}
 							/>
-						);
+						) : null;
 					})}
 			</TodoAppUl>
 		</TodoAppList>
 	);
-};
-
-ToDoItemList.propTypes = {
-	title: PropTypes.string.isRequired,
-	todoList: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			text: PropTypes.string.isRequired,
-		})
-	),
-	setTodoList: PropTypes.func.isRequired,
 };
 
 const TodoAppList = styled.div`

@@ -102,7 +102,7 @@ export default function LoginForm() {
 					value={password}
 					placeholder="비밀번호를 입력하세요"
 					onChange={handlePasswordChange}
-					type="text"
+					type="password"
 				/>
 				{password.length > 0 && !correctPassword && (
 					<ValidInfo>Please enter valid email format</ValidInfo>
