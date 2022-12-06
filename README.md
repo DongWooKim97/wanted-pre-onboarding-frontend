@@ -22,17 +22,17 @@
 
 <br>
 
-### 방법 1(깃 레포지토리 클론 후 직접 실행)
-
 > - 1. 원하는 폴더에서 `git clone (현재주소)`를 한다.
-> - 2. 해당 폴더로 이동한 다음 첫 번째 `npm start`을 한다
->   - 리액트의 개발 서버 open
-> - 3. `cd selection-task`로 하위 폴더인 `selection-task`로 이동 후 `npm start`
->   - 노드 환경의 DB 및 API 서버 실행
+> - 2. `cd wanted~~`를 통해 해당 폴더로 이동한 다음 첫 번째 `npm install`을 한다
+>   - 모듈 및 라이브러리 설치 리액트의 개발 서버 설치
+> - 3. `cd selection-task`로 하위 폴더인 `selection-task`로 이동 후 `npm install`
+>   - 노드 환경의 DB 및 API 서버 설치
+> - 4. 그 다음 백엔드 서버 및 api 서버를 먼저 `npm start`을 한다
+>   - 백엔드 서버(노드서버) 실행 및 api 활성화
+> - 5. 마지막으로 `cd ..`를 통해 root 디렉토리로 와서 `npm start`를 진행한다.
+>   - 로컬 리액트 개발 서버 및 스크립트 환경 실행
 
 <br>
-
-### 방법 2(배포된 정적 사이트 활용)
 
 <br>
 
