@@ -63,16 +63,26 @@ export default function LoginForm() {
 	const onSumbitHandler = (e) => {
 		e.preventDefault();
 
+		// const instance = axios.create({
+		// 	baseURL: 'https://localhost:8000',
+		// });
+
 		postData();
 
 		async function postData() {
 			try {
 				//응답 성공
-				const response = await axios.post('/auth/signin', {
-					//보내고자 하는 데이터
-					email: email,
-					password: password,
-				});
+				const response = await axios.post(
+					'/auth/signin',
+					{
+						//보내고자 하는 데이터
+						email: email,
+						password: password,
+					},
+					{
+						withCredentials: true,
+					}
+				);
 				localStorage.setItem('access_token', response.data.access_token);
 				navigate('/todo');
 			} catch (error) {
