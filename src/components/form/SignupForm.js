@@ -65,30 +65,32 @@ export default function SignupForm() {
 		navigate('/');
 	};
 
-	const onSubmitHandler = (e) => {
+	const isValidSignup = !(
+		email.includes('@') &&
+		email.includes('.') &&
+		password.length >= 8 &&
+		confirmPassword.length >= 8
+	);
+
+	async function postSignupData(e) {
 		e.preventDefault();
 
-		postData();
-
-		async function postData() {
-			try {
-				const response = await axios.post('/auth/signup', {
-					email: email,
-					password: password,
-				});
-				console.log(response.data);
-				alert('회원가입 성공!');
-				navigate('/');
-			} catch (error) {
-				console.error(error);
-			}
+		try {
+			await axios.post('/auth/signup', {
+				email: email,
+				password: password,
+			});
+			alert('회원가입 성공!');
+			navigate('/');
+		} catch (error) {
+			alert('이미 가입된 이메일입니다.');
 		}
-	};
+	}
 
 	return (
 		<SignupContainer>
 			<SignupTitle>S I G N U P</SignupTitle>
-			<form onSubmit={onSubmitHandler}>
+			<form onSubmit={postSignupData}>
 				<EmailBox
 					id="email"
 					value={email}
@@ -119,7 +121,9 @@ export default function SignupForm() {
 				{confirmPassword.length > 0 && !correctConfirmPassword && (
 					<ValidInfo>Please check password correct.</ValidInfo>
 				)}
-				<SignupButton type="submit">회원가입</SignupButton>
+				<SignupButton disabled={isValidSignup} type="submit">
+					회원가입
+				</SignupButton>
 			</form>
 			<BackpageLink onClick={handleBackpageLink}>홈으로</BackpageLink>
 		</SignupContainer>
@@ -171,13 +175,13 @@ const ConfirmPasswordBox = styled.input`
 
 const SignupButton = styled.button`
 	margin: 25px auto;
-	color: purple;
+	color: black;
 	width: 25vw;
 	height: 5vh;
 	border-radius: 25%;
-	background-color: yellow;
-	/* color: black; */
-	color: ${(props) => (props.active ? 'yellow' : 'white')};
+	/* background-color: yellow; */
+
+	background-color: ${(props) => props.disabled || 'yellow'};
 `;
 
 const BackpageLink = styled.button`
