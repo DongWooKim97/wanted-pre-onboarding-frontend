@@ -49,7 +49,7 @@ const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 		}
 	}
 
-	async function updateTodoTextEdit(e) {
+	async function updateTodoTextEdit() {
 		try {
 			await axios.put(
 				`/todos/${todoItem.id}`,
@@ -99,7 +99,7 @@ const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 					onChange={onChangeEditInput}
 				/>
 			) : (
-				<TodoContext id={todoItem.id}>{todoItem.todo}</TodoContext>
+				<TodoContext toggle={todoItem.isCompleted}>{todoItem.todo}</TodoContext>
 			)}
 			{!todoItem.isCompleted ? (
 				edited ? (
