@@ -103,13 +103,16 @@ const ToDoItem = ({ todoItem, todoList, setTodoList }) => {
 			)}
 			{!todoItem.isCompleted ? (
 				edited ? (
-					<TodoEditButton onClick={updateTodoTextEdit}>👌</TodoEditButton>
+					<>
+						<TodoEditButton onClick={updateTodoTextEdit}>👌</TodoEditButton>
+						<TodoEditButton onClick={(e) => setEdited(false)}>🗙</TodoEditButton>
+					</>
 				) : (
-					<TodoEditButton onClick={onClickEditButton}>✏</TodoEditButton>
+					<TodoEditButton onClick={onClickEditButton}>✏️</TodoEditButton>
 				)
 			) : null}
 			<TodoDeleteButton id={todoItem.id} onClick={deleteTodo}>
-				🗑
+				🗑️
 			</TodoDeleteButton>
 		</TodoAppItem>
 	);
